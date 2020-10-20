@@ -90,6 +90,16 @@ var stateData = [{"id":"1","state":"Alabama","abbr":"AL","poverty":"19.3","pover
     data.smokesHigh = +data.smokesHigh;
   });    
 // Render basic chart elements (axes) 
+var xLinearScale = d3.scaleLinear()
+    .domain([0, d3.max(stateData, data => data.age)])
+    .range([0, chartWidth]);
+
+var yLinearScale = d3.scaleLinear()
+    .domain([0, d3.max(stateData, data => data.smokes)])
+    .range([chartHeight, 0]);
+
+var bottomAxis = d3.axisBottom(xLinearScale);
+var leftAxis = d3.axisLeft(yLinearScale);
 
 // Create circles elements
 
