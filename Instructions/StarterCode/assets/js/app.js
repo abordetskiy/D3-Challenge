@@ -1,14 +1,15 @@
-// Set up SVG parameters
-var svgWidth = 1000;
-var svgHeight = 1000;
+// Set up SVG size
+var svgWidth = 1250;
+var svgHeight = 950;
 
+// Establish margins
 var margins = {
   top: 20,
   right: 20,
   bottom: 80,
   left: 80
 };
-
+// Establish chart dimensions based on SVG dimensions less margins
 var chartWidth = svgWidth - margins.left - margins.right;
 var chartHeight = svgHeight - margins.top - margins.bottom;
 
@@ -18,7 +19,7 @@ var svg = d3.select("#scatter")
   .attr("width", svgWidth)
   .attr("height", svgHeight)  ;
 
-// Add group tag to hold chart
+// Add chart group tag to house all elements
 var chartGroup = svg.append("g")
 .attr("transform", `translate(${margins.left}, ${margins.top})`)
 .classed("chart", true); 
@@ -96,27 +97,31 @@ var stateData = [
     data.smokesHigh = +data.smokesHigh;
   });
   
-// Render basic chart elements (axes) 
+// Scale data to fit along x axis
 var xLinearScale = d3.scaleLinear()
     .domain([d3.min(stateData, data => data.age)-1, d3.max(stateData, data => data.age)+1])
     .range([0, chartWidth]);
 
+// Scale data to fit along y axis
 var yLinearScale = d3.scaleLinear()
     .domain([d3.min(stateData, data => data.smokes)-1,d3.max(stateData, data => data.smokes)+1])
     .range([chartHeight, 0]);
 
+// Establish axis variables
 var bottomAxis = d3.axisBottom(xLinearScale);
 var leftAxis = d3.axisLeft(yLinearScale);
 
+// Draw x axis
 chartGroup.append("g")
 .attr("transform", `translate(0, ${chartHeight})`)
 .call(bottomAxis);
 
+// Draw y axis
 chartGroup.append("g")
 .call(leftAxis);
 
 
-// Create circles elements
+// Create circle elements
 var dataPoints = chartGroup.selectAll("circle")
     .data(stateData)
     .enter()
@@ -125,6 +130,7 @@ var dataPoints = chartGroup.selectAll("circle")
     .attr("cx", data => xLinearScale(data.age))
     .attr("cy", data => yLinearScale(data.smokes))
     .attr("r", "15")
+
 // Creates circle state abbreviation labels
 var dataLabels = chartGroup.selectAll(".stateText")
     .data(stateData)
@@ -136,19 +142,19 @@ var dataLabels = chartGroup.selectAll(".stateText")
     .attr("dy", ".4em")
     .text(data => data.abbr)
  
-
- // Create axis labels
- var yLabel = chartGroup.append("text")
- .attr("transform", "rotate(-90)")
- .attr("y", 0 - margins.left + 40)
- .attr("x", 0 - (chartHeight / 2))
- .attr("class", "aText")
- .text("Smokers (as Percentage of Population)");
-
+ // Create x axis label
 var xLabel = chartGroup.append("text")
  .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + margins.top + 20})`)
  .attr("class", "aText")
  .text("Median Age");
+
+// Create y axis labels
+var yLabel = chartGroup.append("text")
+.attr("transform", "rotate(-90)")
+.attr("y", 0 - margins.left + 40)
+.attr("x", 0 - (chartHeight / 2))
+.attr("class", "aText")
+.text("Smokers (as a Percentage of Population)");
 
 // Establish tooltips
 var toolTip = d3.tip()
@@ -156,14 +162,15 @@ var toolTip = d3.tip()
 .offset([-20, 0])
 .html(data => `${data.state}<br>
 Median Age: ${data.age}<br>
-Percentage of Population who Smoke: ${data.smokes}%`);
+Smokers: ${data.smokes}%`);
+
 // Link Tooltips
 dataPoints.call(toolTip);
-// Create event listener
+
+// Create event listeners
 dataPoints.on("click", function(data) {
   toolTip.show(data, this);
 })
-  // onmouseout event
   .on("mouseout", function(data, index) {
     toolTip.hide(data);
   });
