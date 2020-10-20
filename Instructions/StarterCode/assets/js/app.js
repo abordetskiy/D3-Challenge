@@ -1,6 +1,6 @@
 // Set up SVG parameters
 var svgWidth = 1500;
-var svgHeight = 1200;
+var svgHeight = 1500;
 
 var margins = {
   top: 20,
@@ -115,6 +115,7 @@ chartGroup.append("g")
 chartGroup.append("g")
 .call(leftAxis);
 
+
 // Create circles elements
 var dataPoints = chartGroup.selectAll("circle")
     .data(stateData)
@@ -124,7 +125,7 @@ var dataPoints = chartGroup.selectAll("circle")
     .attr("cx", data => xLinearScale(data.age))
     .attr("cy", data => yLinearScale(data.smokes))
     .attr("r", "15")
-// Creeates circle state abbreviation labels
+// Creates circle state abbreviation labels
 var dataLabels = chartGroup.selectAll(".stateText")
     .data(stateData)
     .enter()
@@ -142,11 +143,27 @@ var dataLabels = chartGroup.selectAll(".stateText")
  .attr("y", 0 - margins.left + 40)
  .attr("x", 0 - (chartHeight / 2))
  .attr("class", "aText")
- .text("Smokes");
+ .text("Smokers (as Percentage of Population)");
 
 var xLabel = chartGroup.append("text")
  .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + margins.top + 20})`)
  .attr("class", "aText")
- .text("Age");
-   
+ .text("Median Age");
+
+// Establish tooltips
+var toolTip = d3.tip()
+.attr("class", "d3-tip")
+.offset([-20, 0])
+.html(data => `${data.state}<br>
+Median Age: ${data.age}<br>
+Percentage of Population who Smoke: ${data.smokes}%`);
+// Link Tooltips
+dataLabels.call(toolTip);
 // Create event listener
+dataLabels.on("click", function(data) {
+  toolTip.show(data, this);
+})
+  // onmouseout event
+  .on("mouseout", function(data, index) {
+    toolTip.hide(data);
+  });
