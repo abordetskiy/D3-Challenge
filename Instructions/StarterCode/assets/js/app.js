@@ -5,8 +5,8 @@ var svgHeight = 1200;
 var margins = {
   top: 20,
   right: 20,
-  bottom: 20,
-  left: 20
+  bottom: 80,
+  left: 80
 };
 
 var chartWidth = svgWidth - margins.left - margins.right;
@@ -135,3 +135,18 @@ var dataLabels = chartGroup.selectAll(".stateText")
     .attr("dy", ".4em")
     .text(data => data.abbr)
  
+
+ // Create axis labels
+ var yLabel = chartGroup.append("text")
+ .attr("transform", "rotate(-90)")
+ .attr("y", 0 - margins.left + 40)
+ .attr("x", 0 - (chartHeight / 2))
+ .attr("class", "aText")
+ .text("Smokes");
+
+var xLabel = chartGroup.append("text")
+ .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + margins.top + 20})`)
+ .attr("class", "aText")
+ .text("Age");
+   
+// Create event listener
