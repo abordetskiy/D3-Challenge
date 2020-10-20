@@ -18,6 +18,10 @@ var svg = d3.select("#scatter")
   .attr("width", svgWidth)
   .attr("height", svgHeight);
 
+// Add group tag to hold chart
+var chartGroup = svg.append("g")
+.attr("transform", `translate(${margins.left}, ${margins.top})`); 
+
 // Pull in Data
 var stateData = [{"id":"1","state":"Alabama","abbr":"AL","poverty":"19.3","povertyMoe":"0.5","age":"38.6","ageMoe":"0.2","income":"42830","incomeMoe":"598","healthcare":"13.9","healthcareLow":"12.7","healthcareHigh":"15.1","obesity":"33.5","obesityLow":"32.1","obesityHigh":"35","smokes":"21.1","smokesLow":"19.8","smokesHigh":"22.5","-0.385218228":""},
     {"id":"2","state":"Alaska","abbr":"AK","poverty":"11.2","povertyMoe":"0.9","age":"33.3","ageMoe":"0.3","income":"71583","incomeMoe":"1784","healthcare":"15","healthcareLow":"13.3","healthcareHigh":"16.6","obesity":"29.7","obesityLow":"27.8","obesityHigh":"31.6","smokes":"19.9","smokesLow":"18.2","smokesHigh":"21.6","-0.385218228":""},
@@ -100,6 +104,13 @@ var yLinearScale = d3.scaleLinear()
 
 var bottomAxis = d3.axisBottom(xLinearScale);
 var leftAxis = d3.axisLeft(yLinearScale);
+
+chartGroup.append("g")
+.attr("transform", `translate(0, ${chartHeight})`)
+.call(bottomAxis);
+
+chartGroup.append("g")
+.call(leftAxis);
 
 // Create circles elements
 
