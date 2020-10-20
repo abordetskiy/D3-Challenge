@@ -158,9 +158,9 @@ var toolTip = d3.tip()
 Median Age: ${data.age}<br>
 Percentage of Population who Smoke: ${data.smokes}%`);
 // Link Tooltips
-dataLabels.call(toolTip);
+dataPoints.call(toolTip);
 // Create event listener
-dataLabels.on("click", function(data) {
+dataPoints.on("click", function(data) {
   toolTip.show(data, this);
 })
   // onmouseout event
