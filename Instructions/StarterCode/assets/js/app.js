@@ -1,6 +1,6 @@
 // Set up SVG parameters
-var svgWidth = 1500;
-var svgHeight = 750;
+var svgWidth = 750;
+var svgHeight = 350;
 
 var margins = {
   top: 20,
@@ -16,11 +16,12 @@ var chartHeight = svgHeight - margins.top - margins.bottom;
 var svg = d3.select("#scatter")
   .append("svg")
   .attr("width", svgWidth)
-  .attr("height", svgHeight);
+  .attr("height", svgHeight)  ;
 
 // Add group tag to hold chart
 var chartGroup = svg.append("g")
-.attr("transform", `translate(${margins.left}, ${margins.top})`); 
+.attr("transform", `translate(${margins.left}, ${margins.top})`)
+.classed("chart", true); 
 
 // Pull in Data
 var stateData = [{"id":"1","state":"Alabama","abbr":"AL","poverty":"19.3","povertyMoe":"0.5","age":"38.6","ageMoe":"0.2","income":"42830","incomeMoe":"598","healthcare":"13.9","healthcareLow":"12.7","healthcareHigh":"15.1","obesity":"33.5","obesityLow":"32.1","obesityHigh":"35","smokes":"21.1","smokesLow":"19.8","smokesHigh":"22.5","-0.385218228":""},
@@ -92,14 +93,15 @@ var stateData = [{"id":"1","state":"Alabama","abbr":"AL","poverty":"19.3","pover
     data.smokes = +data.smokes;
     data.smokesLow = +data.smokesLow;
     data.smokesHigh = +data.smokesHigh;
-  });    
+  });
+  
 // Render basic chart elements (axes) 
 var xLinearScale = d3.scaleLinear()
-    .domain([0, d3.max(stateData, data => data.age)])
+    .domain([d3.min(stateData, data => data.age)-2, d3.max(stateData, data => data.age)+2])
     .range([0, chartWidth]);
 
 var yLinearScale = d3.scaleLinear()
-    .domain([0, d3.max(stateData, data => data.smokes)])
+    .domain([d3.min(stateData, data => data.smokes)-2, d3.max(stateData, data => data.smokes)+2])
     .range([chartHeight, 0]);
 
 var bottomAxis = d3.axisBottom(xLinearScale);
@@ -113,6 +115,36 @@ chartGroup.append("g")
 .call(leftAxis);
 
 // Create circles elements
+var dataPoints = chartGroup.selectAll("circle")
+    .data(stateData)
+    .enter()
+    .append("circle")
+    .classed("stateCircle", true)
+    .attr("cx", data => xLinearScale(data.age))
+    .attr("cy", data => yLinearScale(data.smokes))
+    .attr("r", "15")
+
+var dataLabels = chartGroup.selectAll("text")
+    .data(stateData)
+    .enter()
+    .append("text")
+    .attr("x", data => xLinearScale(data.age))
+    .attr("y", data => yLinearScale(data.smokes))
+    .classed("stateText", true)
+    .attr("dy", ".35em")
+    .text(data => data.abbr)
+ 
+
+// chartGroup.selectAll("text")
+//     .data(stateData)
+//     .enter()
+//     .append("text")
+//     .attr("stroke", "black")
+//     .attr("x", data => xLinearScale(data.age))
+//     .attr("y", 550)
+//     .attr("dy", ".35em")
+//     .attr("font-size", 15)
+//     .text(data => data.abbr);
 
 
 // Create event listenter
