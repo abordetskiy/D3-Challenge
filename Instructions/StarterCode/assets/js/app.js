@@ -1,6 +1,6 @@
 // Set up SVG parameters
-var svgWidth = 1500;
-var svgHeight = 1500;
+var svgWidth = 1000;
+var svgHeight = 1000;
 
 var margins = {
   top: 20,
