@@ -18,9 +18,8 @@ var svg = d3.select("#scatter")
   .attr("width", svgWidth)
   .attr("height", svgHeight);
 
-
 // Pull in Data
-var data = [{"id":"1","state":"Alabama","abbr":"AL","poverty":"19.3","povertyMoe":"0.5","age":"38.6","ageMoe":"0.2","income":"42830","incomeMoe":"598","healthcare":"13.9","healthcareLow":"12.7","healthcareHigh":"15.1","obesity":"33.5","obesityLow":"32.1","obesityHigh":"35","smokes":"21.1","smokesLow":"19.8","smokesHigh":"22.5","-0.385218228":""},
+var stateData = [{"id":"1","state":"Alabama","abbr":"AL","poverty":"19.3","povertyMoe":"0.5","age":"38.6","ageMoe":"0.2","income":"42830","incomeMoe":"598","healthcare":"13.9","healthcareLow":"12.7","healthcareHigh":"15.1","obesity":"33.5","obesityLow":"32.1","obesityHigh":"35","smokes":"21.1","smokesLow":"19.8","smokesHigh":"22.5","-0.385218228":""},
     {"id":"2","state":"Alaska","abbr":"AK","poverty":"11.2","povertyMoe":"0.9","age":"33.3","ageMoe":"0.3","income":"71583","incomeMoe":"1784","healthcare":"15","healthcareLow":"13.3","healthcareHigh":"16.6","obesity":"29.7","obesityLow":"27.8","obesityHigh":"31.6","smokes":"19.9","smokesLow":"18.2","smokesHigh":"21.6","-0.385218228":""},
     {"id":"4","state":"Arizona","abbr":"AZ","poverty":"18.2","povertyMoe":"0.4","age":"36.9","ageMoe":"0.1","income":"50068","incomeMoe":"483","healthcare":"14.4","healthcareLow":"13.3","healthcareHigh":"15.6","obesity":"28.9","obesityLow":"27.7","obesityHigh":"30.2","smokes":"16.5","smokesLow":"15.4","smokesHigh":"17.6","-0.385218228":""},
     {"id":"5","state":"Arkansas","abbr":"AR","poverty":"18.9","povertyMoe":"0.5","age":"37.8","ageMoe":"0.2","income":"41262","incomeMoe":"653","healthcare":"16.3","healthcareLow":"14.4","healthcareHigh":"18.2","obesity":"35.9","obesityLow":"33.8","obesityHigh":"38","smokes":"24.7","smokesLow":"22.7","smokesHigh":"26.7","-0.385218228":""},
@@ -72,6 +71,24 @@ var data = [{"id":"1","state":"Alabama","abbr":"AL","poverty":"19.3","povertyMoe
     {"id":"55","state":"Wisconsin","abbr":"WI","poverty":"13.2","povertyMoe":"0.4","age":"39.2","ageMoe":"0.2","income":"52622","incomeMoe":"433","healthcare":"8.5","healthcareLow":"7.4","healthcareHigh":"9.7","obesity":"31.2","obesityLow":"29.6","obesityHigh":"32.8","smokes":"17.4","smokesLow":"16","smokesHigh":"18.7","-0.385218228":""},
     {"id":"56","state":"Wyoming","abbr":"WY","poverty":"11.2","povertyMoe":"0.9","age":"36.6","ageMoe":"0.4","income":"57055","incomeMoe":"1983","healthcare":"15.1","healthcareLow":"13.3","healthcareHigh":"16.9","obesity":"29.5","obesityLow":"27.4","obesityHigh":"31.5","smokes":"19.5","smokesLow":"17.6","smokesHigh":"21.4","-0.385218228":""}]
 
+ // Parse data fields that contain numeric values
+ stateData.forEach(function(data) {
+    data.poverty = +data.poverty;
+    data.povertyMoe = +data.povertyMoe;
+    data.age = +data.age;
+    data.ageMoe = +data.ageMoe;
+    data.income = +data.income;
+    data.incomeMoe = +data.incomeMoe;
+    data.healthcare = +data.healthcare;
+    data.healthcareLow = +data.healthcareLow;
+    data.healthcareHigh = +data.healthcareHigh;
+    data.obesity = +data.obesity;
+    data.obesityLow = +data.obesityLow;
+    data.obesityHigh = +data.obesityHigh;
+    data.smokes = +data.smokes;
+    data.smokesLow = +data.smokesLow;
+    data.smokesHigh = +data.smokesHigh;
+  });    
 // Render basic chart elements (axes) 
 
 // Create circles elements
