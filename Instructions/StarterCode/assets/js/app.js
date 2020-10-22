@@ -103,14 +103,15 @@ var stateData = [
 var selectedAxisX = "age"
 var selectedAxisY = "smokes"
 
+function createChart(stateData, xAxis, yAxis) {
 // Scale data to fit along x axis
 var xLinearScale = d3.scaleLinear()
-    .domain([d3.min(stateData, data => data.age)-1, d3.max(stateData, data => data[selectedAxisX])+1])
+    .domain([d3.min(stateData, data => data.age)-1, d3.max(stateData, data => data[xAxis])+1])
     .range([0, chartWidth]);
 
 // Scale data to fit along y axis
 var yLinearScale = d3.scaleLinear()
-    .domain([d3.min(stateData, data => data.smokes)-1,d3.max(stateData, data => data[selectedAxisY])+1])
+    .domain([d3.min(stateData, data => data.smokes)-1,d3.max(stateData, data => data[yAxis])+1])
     .range([chartHeight, 0]);
 
 // Establish axis variables
@@ -133,8 +134,8 @@ var dataPoints = chartGroup.selectAll("circle")
     .enter()
     .append("circle")
     .classed("stateCircle", true)
-    .attr("cx", data => xLinearScale(data.age))
-    .attr("cy", data => yLinearScale(data.smokes))
+    .attr("cx", data => xLinearScale(data[xAxis]))
+    .attr("cy", data => yLinearScale(data[yAxis]))
     .attr("r", "15")
 
 // Creates circle state abbreviation labels
@@ -142,8 +143,8 @@ var dataLabels = chartGroup.selectAll(".stateText")
     .data(stateData)
     .enter()
     .append("text")
-    .attr("x", data => xLinearScale(data.age))
-    .attr("y", data => yLinearScale(data.smokes))
+    .attr("x", data => xLinearScale(data[xAxis]))
+    .attr("y", data => yLinearScale(data[yAxis]))
     .classed("stateText", true)
     .attr("dy", ".4em")
     .text(data => data.abbr)
@@ -173,6 +174,7 @@ Smokers: ${data.smokes}%`);
 // Link Tooltips
 dataPoints.call(toolTip);
 
+
 // Create event listeners
 dataPoints.on("click", function(data) {
   toolTip.show(data, this);
@@ -180,3 +182,6 @@ dataPoints.on("click", function(data) {
   .on("mouseout", function(data, index) {
     toolTip.hide(data);
   });
+};
+
+createChart(stateData, selectedAxisX, selectedAxisY)
