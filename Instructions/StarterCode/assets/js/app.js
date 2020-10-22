@@ -96,14 +96,16 @@ var stateData = [
     data.smokesLow = +data.smokesLow;
     data.smokesHigh = +data.smokesHigh;
   });
-// ==============================
 
 // Establish initial axes
 
 var selectedAxisX = "age"
 var selectedAxisY = "smokes"
 
+var axisOptions = {"obesity": "Obese (%)","smokes": "Smokers (%)", "healthcare": "Lacks Healthcare (%)", "age": "Age (Median)", "poverty": "In Poverty (%)", "income": "Household INcome (Median)" }
+// ============================================
 function createChart(stateData, xAxis, yAxis) {
+
 // Scale data to fit along x axis
 var xLinearScale = d3.scaleLinear()
     .domain([d3.min(stateData, data => data.age)-1, d3.max(stateData, data => data[xAxis])+1])
@@ -127,7 +129,6 @@ chartGroup.append("g")
 chartGroup.append("g")
 .call(leftAxis);
 
-
 // Create circle elements
 var dataPoints = chartGroup.selectAll("circle")
     .data(stateData)
@@ -136,7 +137,7 @@ var dataPoints = chartGroup.selectAll("circle")
     .classed("stateCircle", true)
     .attr("cx", data => xLinearScale(data[xAxis]))
     .attr("cy", data => yLinearScale(data[yAxis]))
-    .attr("r", "15")
+    .attr("r", "15");
 
 // Creates circle state abbreviation labels
 var dataLabels = chartGroup.selectAll(".stateText")
@@ -147,33 +148,18 @@ var dataLabels = chartGroup.selectAll(".stateText")
     .attr("y", data => yLinearScale(data[yAxis]))
     .classed("stateText", true)
     .attr("dy", ".4em")
-    .text(data => data.abbr)
+    .text(data => data.abbr);
  
- // Create x axis label
-var xLabel = chartGroup.append("text")
- .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + margins.top + 20})`)
- .attr("class", "aText")
- .text("Median Age");
-
-// Create y axis labels
-var yLabel = chartGroup.append("text")
-.attr("transform", "rotate(-90)")
-.attr("y", 0 - margins.left + 40)
-.attr("x", 0 - (chartHeight / 2))
-.attr("class", "aText")
-.text("Smokers (as a Percentage of Population)");
-
 // Establish tooltips
 var toolTip = d3.tip()
 .attr("class", "d3-tip")
 .offset([-20, 0])
 .html(data => `${data.state}<br>
-Median Age: ${data.age}<br>
-Smokers: ${data.smokes}%`);
+${axisOptions[xAxis]}: ${data[xAxis]}<br>
+${axisOptions[yAxis]}: ${data[yAxis]}%`);
 
 // Link Tooltips
 dataPoints.call(toolTip);
-
 
 // Create event listeners
 dataPoints.on("click", function(data) {
@@ -183,5 +169,20 @@ dataPoints.on("click", function(data) {
     toolTip.hide(data);
   });
 };
+// ============================================
+
+ // Create x axis label
+ var xLabel = chartGroup.append("text")
+ .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + margins.top + 20})`)
+ .attr("class", "aText")
+ .text(axisOptions[selectedAxisX]);
+
+// Create y axis labels
+var yLabel = chartGroup.append("text")
+.attr("transform", "rotate(-90)")
+.attr("y", 0 - margins.left + 40)
+.attr("x", 0 - (chartHeight / 2))
+.attr("class", "aText")
+.text(axisOptions[selectedAxisY]);
 
 createChart(stateData, selectedAxisX, selectedAxisY)
