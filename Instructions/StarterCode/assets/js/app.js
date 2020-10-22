@@ -211,6 +211,53 @@ var healthcareAxisLabel = chartGroup.append("text")
 .attr("class", "aText")
 .text(axisOptions["healthcare"]);
 
+// Run conditionals to visual show the selected axes
+switch(selectedAxisX) {
+  case (selectedAxisX === axisOptions["poverty"]):
+    povertyAxisLabel
+    .classed("active", true)
+    .classed("inactive", false);
+    break;
+  case (selectedAxisX === axisOptions["age"]):
+    ageAxisLabel
+    .classed("active", true)
+    .classed("inactive", false);
+    break;
+  case (selectedAxisX === axisOptions["income"]):
+    incomeAxisLabel
+    .classed("active", true)
+    .classed("inactive", false);
+    break;
+  default:
+    ageAxisLabel
+    .classed("active", true)
+    .classed("inactive", false);
+    break;  
+};
+
+switch(selectedAxisY) {
+  case (selectedAxisX === axisOptions["obesity"]):
+    obesityAxisLabel
+    .classed("active", true)
+    .classed("inactive", false);
+    break;
+  case (selectedAxisY === axisOptions["smokes"]):
+    smokesAxisLabel
+    .classed("active", true)
+    .classed("inactive", false);
+    break;
+  case (selectedAxisY === axisOptions["healthcare"]):
+    healthcareAxisLabel
+    .classed("active", true)
+    .classed("inactive", false);
+    break;
+  default:
+    smokesAxisLabel
+    .classed("active", true)
+    .classed("inactive", false);
+    break;  
+};
+
 createChart(stateData, selectedAxisX, selectedAxisY)
 
 
