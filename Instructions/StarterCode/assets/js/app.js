@@ -96,15 +96,21 @@ var stateData = [
     data.smokesLow = +data.smokesLow;
     data.smokesHigh = +data.smokesHigh;
   });
-  
+// ==============================
+
+// Establish initial axes
+
+var selectedAxisX = "age"
+var selectedAxisY = "smokes"
+
 // Scale data to fit along x axis
 var xLinearScale = d3.scaleLinear()
-    .domain([d3.min(stateData, data => data.age)-1, d3.max(stateData, data => data.age)+1])
+    .domain([d3.min(stateData, data => data.age)-1, d3.max(stateData, data => data[selectedAxisX])+1])
     .range([0, chartWidth]);
 
 // Scale data to fit along y axis
 var yLinearScale = d3.scaleLinear()
-    .domain([d3.min(stateData, data => data.smokes)-1,d3.max(stateData, data => data.smokes)+1])
+    .domain([d3.min(stateData, data => data.smokes)-1,d3.max(stateData, data => data[selectedAxisY])+1])
     .range([chartHeight, 0]);
 
 // Establish axis variables
