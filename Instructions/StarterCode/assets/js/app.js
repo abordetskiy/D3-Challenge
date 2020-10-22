@@ -356,8 +356,8 @@ function updateChart(newAxisX, newAxisY) {
     .range([chartHeight, 0]);
   
   // Re-stablish axis variables
-  bottomAxis = d3.axisBottom(xLinearScale);
-  leftAxis = d3.axisLeft(yLinearScale);
+  bottomAxis = d3.axisBottom(newLinearScaleX);
+  leftAxis = d3.axisLeft(newLinearScaleY);
   
   // Re-draw X axis
   currentAxisX.transition()
