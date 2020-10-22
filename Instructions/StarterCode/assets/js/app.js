@@ -1,6 +1,6 @@
 // Set up SVG size
-var svgWidth = 1250;
-var svgHeight = 950;
+var svgWidth = 1750;
+var svgHeight = 1500;
 
 // Establish margins
 var margins = {
@@ -9,6 +9,7 @@ var margins = {
   bottom: 100,
   left: 120
 };
+
 // Establish chart dimensions based on SVG dimensions less margins
 var chartWidth = svgWidth - margins.left - margins.right;
 var chartHeight = svgHeight - margins.top - margins.bottom;
@@ -17,14 +18,14 @@ var chartHeight = svgHeight - margins.top - margins.bottom;
 var svg = d3.select("#scatter")
   .append("svg")
   .attr("width", svgWidth)
-  .attr("height", svgHeight)  ;
+  .attr("height", svgHeight);
 
 // Add chart group tag to house all elements
 var chartGroup = svg.append("g")
-.attr("transform", `translate(${margins.left}, ${margins.top})`)
-.classed("chart", true); 
+  .attr("transform", `translate(${margins.left}, ${margins.top})`)
+  .classed("chart", true); 
 
-// Pull in Data
+// Pull in Data - due to CORS error, I've opted to hard code the data so that it can easily be implemented into Github Pages without running a server through Python
 var stateData = [
     {"id":"1","state":"Alabama","abbr":"AL","poverty":"19.3","povertyMoe":"0.5","age":"38.6","ageMoe":"0.2","income":"42830","incomeMoe":"598","healthcare":"13.9","healthcareLow":"12.7","healthcareHigh":"15.1","obesity":"33.5","obesityLow":"32.1","obesityHigh":"35","smokes":"21.1","smokesLow":"19.8","smokesHigh":"22.5"},
     {"id":"2","state":"Alaska","abbr":"AK","poverty":"11.2","povertyMoe":"0.9","age":"33.3","ageMoe":"0.3","income":"71583","incomeMoe":"1784","healthcare":"15","healthcareLow":"13.3","healthcareHigh":"16.6","obesity":"29.7","obesityLow":"27.8","obesityHigh":"31.6","smokes":"19.9","smokesLow":"18.2","smokesHigh":"21.6"},
@@ -78,156 +79,164 @@ var stateData = [
     {"id":"55","state":"Wisconsin","abbr":"WI","poverty":"13.2","povertyMoe":"0.4","age":"39.2","ageMoe":"0.2","income":"52622","incomeMoe":"433","healthcare":"8.5","healthcareLow":"7.4","healthcareHigh":"9.7","obesity":"31.2","obesityLow":"29.6","obesityHigh":"32.8","smokes":"17.4","smokesLow":"16","smokesHigh":"18.7"},
     {"id":"56","state":"Wyoming","abbr":"WY","poverty":"11.2","povertyMoe":"0.9","age":"36.6","ageMoe":"0.4","income":"57055","incomeMoe":"1983","healthcare":"15.1","healthcareLow":"13.3","healthcareHigh":"16.9","obesity":"29.5","obesityLow":"27.4","obesityHigh":"31.5","smokes":"19.5","smokesLow":"17.6","smokesHigh":"21.4"}]
 
- // Parse data fields that contain numeric values
+// Parse data fields that contain numeric values
  stateData.forEach(function(data) {
-    data.poverty = +data.poverty;
-    data.povertyMoe = +data.povertyMoe;
-    data.age = +data.age;
-    data.ageMoe = +data.ageMoe;
-    data.income = +data.income;
-    data.incomeMoe = +data.incomeMoe;
-    data.healthcare = +data.healthcare;
-    data.healthcareLow = +data.healthcareLow;
-    data.healthcareHigh = +data.healthcareHigh;
-    data.obesity = +data.obesity;
-    data.obesityLow = +data.obesityLow;
-    data.obesityHigh = +data.obesityHigh;
-    data.smokes = +data.smokes;
-    data.smokesLow = +data.smokesLow;
-    data.smokesHigh = +data.smokesHigh;
+  data.poverty = +data.poverty;
+  data.povertyMoe = +data.povertyMoe;
+  data.age = +data.age;
+  data.ageMoe = +data.ageMoe;
+  data.income = +data.income;
+  data.incomeMoe = +data.incomeMoe;
+  data.healthcare = +data.healthcare;
+  data.healthcareLow = +data.healthcareLow;
+  data.healthcareHigh = +data.healthcareHigh;
+  data.obesity = +data.obesity;
+  data.obesityLow = +data.obesityLow;
+  data.obesityHigh = +data.obesityHigh;
+  data.smokes = +data.smokes;
+  data.smokesLow = +data.smokesLow;
+  data.smokesHigh = +data.smokesHigh;
   });
 
 // Establish initial axes
+var selectedAxisX = "age";
+var selectedAxisY = "smokes";
 
-var selectedAxisX = "age"
-var selectedAxisY = "smokes"
+// Establish dictionary to be used to connect data keys with axis text values
+var axisOptions = {"obesity": "Obese (%)","smokes": "Smokers (%)", "healthcare": "Lacks Healthcare (%)", "age": "Age (Median)", "poverty": "In Poverty (%)", "income": "Household Income (Median)" };
 
-var axisOptions = {"obesity": "Obese (%)","smokes": "Smokers (%)", "healthcare": "Lacks Healthcare (%)", "age": "Age (Median)", "poverty": "In Poverty (%)", "income": "Household Income (Median)" }
 // ============================================
-function createChart(stateData, xAxis, yAxis) {
 
-// Scale data to fit along x axis
+// Scale data to fit along X axis
 var xLinearScale = d3.scaleLinear()
-    .domain([d3.min(stateData, data => data[xAxis])-1, d3.max(stateData, data => data[xAxis])+1])
-    .range([0, chartWidth]);
+  .domain([d3.min(stateData, data => data[selectedAxisX])-1, d3.max(stateData, data => data[selectedAxisX])+1])
+  .range([0, chartWidth]);
 
-// Scale data to fit along y axis
+// Scale data to fit along Y axis
 var yLinearScale = d3.scaleLinear()
-    .domain([d3.min(stateData, data => data[yAxis])-1,d3.max(stateData, data => data[yAxis])+1])
-    .range([chartHeight, 0]);
+  .domain([d3.min(stateData, data => data[selectedAxisY])-1,d3.max(stateData, data => data[selectedAxisY])+1])
+  .range([chartHeight, 0]);
 
 // Establish axis variables
 var bottomAxis = d3.axisBottom(xLinearScale);
 var leftAxis = d3.axisLeft(yLinearScale);
 
-// Draw x axis
-chartGroup.append("g")
-.attr("transform", `translate(0, ${chartHeight})`)
-.call(bottomAxis);
+// Draw X axis
+var currentAxisX = chartGroup.append("g")
+  .attr("transform", `translate(0, ${chartHeight})`)
+  .call(bottomAxis);
 
-// Draw y axis
-chartGroup.append("g")
+// Draw Y axis
+var currentAxisY = chartGroup.append("g")
 .call(leftAxis);
 
 // Create circle elements
 var dataPoints = chartGroup.selectAll("circle")
-    .data(stateData)
-    .enter()
-    .append("circle")
-    .classed("stateCircle", true)
-    .attr("cx", data => xLinearScale(data[xAxis]))
-    .attr("cy", data => yLinearScale(data[yAxis]))
-    .attr("r", "15");
+  .data(stateData)
+  .enter()
+  .append("circle")
+  .classed("stateCircle", true)
+  .attr("cx", data => xLinearScale(data[selectedAxisX]))
+  .attr("cy", data => yLinearScale(data[selectedAxisY]))
+  .attr("r", "15");
 
 // Creates circle state abbreviation labels
 var dataLabels = chartGroup.selectAll(".stateText")
-    .data(stateData)
-    .enter()
-    .append("text")
-    .attr("x", data => xLinearScale(data[xAxis]))
-    .attr("y", data => yLinearScale(data[yAxis]))
-    .classed("stateText", true)
-    .attr("dy", ".4em")
-    .text(data => data.abbr);
+  .data(stateData)
+  .enter()
+  .append("text")
+  .attr("x", data => xLinearScale(data[selectedAxisX]))
+  .attr("y", data => yLinearScale(data[selectedAxisY]))
+  .classed("stateText", true)
+  .attr("dy", ".4em")
+  .text(data => data.abbr);
  
 // Establish tooltips
 var toolTip = d3.tip()
-.attr("class", "d3-tip")
-.offset([-20, 0])
-.html(data => `${data.state}<br>
-${axisOptions[xAxis]}: ${data[xAxis]}<br>
-${axisOptions[yAxis]}: ${data[yAxis]}`);
+  .attr("class", "d3-tip")
+  .offset([-20, 0])
+  .html(stateData => `${stateData.state}<br>
+  ${axisOptions[selectedAxisX]}: ${stateData[selectedAxisX]}<br>
+  ${axisOptions[selectedAxisY]}: ${stateData[selectedAxisY]}`);
 
 // Link Tooltips
 dataPoints.call(toolTip);
 
-// Create event listeners
-dataPoints.on("click", function(data) {
-  toolTip.show(data, this);
-})
-  .on("mouseout", function(data, index) {
-    toolTip.hide(data);
-  });
-};
+  // Create event listeners
+  dataPoints.on("click", function(data) {
+    toolTip.show(data, this);
+  })
+    .on("mouseout", function(data) {
+      toolTip.hide(data, this);
+    });
+
 // ============================================
 
- // Create x axis label
- var povertyAxisLabel = chartGroup.append("text")
- .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + margins.top + 20})`)
- .attr("class", "aTextX")
- .classed("active", false)
- .classed("inactive", true)
- .text(axisOptions["poverty"]);
+  // Create X axis label
+var povertyAxisLabel = chartGroup.append("text")
+  .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + margins.top + 20})`)
+  .attr("class", "aTextX")
+  .classed("active", false)
+  .classed("inactive", true)
+  .text(axisOptions["poverty"]);
 
- var ageAxisLabel = chartGroup.append("text")
- .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + margins.top + 40})`)
- .attr("class", "aTextX")
- .classed("active", true)
- .classed("inactive", false)
- .text(axisOptions["age"]);
+var ageAxisLabel = chartGroup.append("text")
+  .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + margins.top + 40})`)
+  .attr("class", "aTextX")
+  .classed("active", true)
+  .classed("inactive", false)
+  .text(axisOptions["age"]);
 
- var incomeAxisLabel = chartGroup.append("text")
- .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + margins.top + 60})`)
- .attr("class", "aTextX")
- .classed("active", false)
- .classed("inactive", true)
- .text(axisOptions["income"]);
+var incomeAxisLabel = chartGroup.append("text")
+  .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + margins.top + 60})`)
+  .attr("class", "aTextX")
+  .classed("active", false)
+  .classed("inactive", true)
+  .text(axisOptions["income"]);
 
-// Create y axis labels
+// Create Y axis labels
 var obesityAxisLabel = chartGroup.append("text")
-.attr("transform", "rotate(-90)")
-.attr("y", 0 - margins.left + 40)
-.attr("x", 0 - (chartHeight / 2))
-.attr("class", "aTextY")
-.classed("active", false)
-.classed("inactive", true)
-.text(axisOptions["obesity"]);
+  .attr("transform", "rotate(-90)")
+  .attr("y", 0 - margins.left + 40)
+  .attr("x", 0 - (chartHeight / 2))
+  .attr("class", "aTextY")
+  .classed("active", false)
+  .classed("inactive", true)
+  .text(axisOptions["obesity"]);
 
 var smokesAxisLabel = chartGroup.append("text")
-.attr("transform", "rotate(-90)")
-.attr("y", 0 - margins.left + 60)
-.attr("x", 0 - (chartHeight / 2))
-.attr("class", "aTextY")
-.classed("active", true)
-.classed("inactive", false)
-.text(axisOptions["smokes"]);
+  .attr("transform", "rotate(-90)")
+  .attr("y", 0 - margins.left + 60)
+  .attr("x", 0 - (chartHeight / 2))
+  .attr("class", "aTextY")
+  .classed("active", true)
+  .classed("inactive", false)
+  .text(axisOptions["smokes"]);
 
 var healthcareAxisLabel = chartGroup.append("text")
-.attr("transform", "rotate(-90)")
-.attr("y", 0 - margins.left + 80)
-.attr("x", 0 - (chartHeight / 2))
-.attr("class", "aTextY")
-.classed("active", false)
-.classed("inactive", true)
-.text(axisOptions["healthcare"]);
+  .attr("transform", "rotate(-90)")
+  .attr("y", 0 - margins.left + 80)
+  .attr("x", 0 - (chartHeight / 2))
+  .attr("class", "aTextY")
+  .classed("active", false)
+  .classed("inactive", true)
+  .text(axisOptions["healthcare"]);
 
+// ============================================
+
+// Establish event handlers for X axis selection on mouseclick
 var labelsGroupX = chartGroup.selectAll(".aTextX").on("click", function() {
 var labelValueX = d3.select(this).text();
-console.log(labelValueX)
-// Run conditionals to visual show the selected axes
+
+// Pulls the dictionary key from it's value
+selectedAxisX = Object.keys(axisOptions).filter(function(key) {return axisOptions[key] === labelValueX})[0];
+
+// Call function to re-draw chart with new X axis
+updateChart(selectedAxisX, selectedAxisY);
+
+// Run conditionals to visually show the selected X axis
 switch(labelValueX) {
   case (axisOptions["poverty"]):
-    console.log(labelValueX)
     povertyAxisLabel
     .classed("active", true)
     .classed("inactive", false);
@@ -239,7 +248,6 @@ switch(labelValueX) {
     .classed("inactive", true);
     break;
   case (axisOptions["age"]):
-    console.log(labelValueX)
     povertyAxisLabel
     .classed("active", false)
     .classed("inactive", true);
@@ -251,7 +259,6 @@ switch(labelValueX) {
     .classed("inactive", true);
     break;
   case (axisOptions["income"]):
-    console.log(labelValueX)
     povertyAxisLabel
     .classed("active", false)
     .classed("inactive", true);
@@ -273,15 +280,21 @@ switch(labelValueX) {
     .classed("active", false)
     .classed("inactive", true);
     break;  
-};
+  };
 });
 
+// Establish event handlers for Y axis selection on mouseclick
 var labelsGroupY = chartGroup.selectAll(".aTextY").on("click", function() {
 var labelValueY = d3.select(this).text();
-console.log(labelValueY)
+
+// Pulls the dictionary key from it's value
+selectedAxisY = Object.keys(axisOptions).filter(function(key) {return axisOptions[key] === labelValueY})[0];
+
+// Call function to re-draw chart with new Y axis
+updateChart(selectedAxisX, selectedAxisY);
+// Run conditionals to visually show the selected Y axis
 switch(labelValueY) {
   case (axisOptions["obesity"]):
-    console.log(labelValueY)
     obesityAxisLabel
     .classed("active", true)
     .classed("inactive", false);
@@ -293,7 +306,6 @@ switch(labelValueY) {
     .classed("inactive", true);
     break;
   case (axisOptions["smokes"]):
-    console.log(labelValueY)
     obesityAxisLabel
     .classed("active", false)
     .classed("inactive", true);
@@ -305,7 +317,6 @@ switch(labelValueY) {
     .classed("inactive", true);
     break;
   case (axisOptions["healthcare"]):
-    console.log(labelValueY)
     obesityAxisLabel
     .classed("active", false)
     .classed("inactive", true);
@@ -327,7 +338,67 @@ switch(labelValueY) {
     .classed("active", false)
     .classed("inactive", true);
     break;  
-};
+  };
 });
 
-createChart(stateData, selectedAxisX, selectedAxisY)
+
+
+function updateChart(newAxisX, newAxisY) {
+
+  // Scale data to fit along new X axis
+  newLinearScaleX = d3.scaleLinear()
+    .domain([d3.min(stateData, data => data[newAxisX])-1, d3.max(stateData, data => data[newAxisX])+1])
+    .range([0, chartWidth]);
+  
+  // Scale data to fit along new Y axis
+  newLinearScaleY = d3.scaleLinear()
+    .domain([d3.min(stateData, data => data[newAxisY])-1,d3.max(stateData, data => data[newAxisY])+1])
+    .range([chartHeight, 0]);
+  
+  // Re-stablish axis variables
+  bottomAxis = d3.axisBottom(xLinearScale);
+  leftAxis = d3.axisLeft(yLinearScale);
+  
+  // Re-draw X axis
+  currentAxisX.transition()
+    .duration(1000)
+    .call(bottomAxis)
+  
+  // Re-draw Y axis
+  currentAxisY.transition()
+    .duration(1000)
+    .call(leftAxis);
+  
+  // Re-orient circle elements
+  dataPoints.transition()
+    .duration(1000)
+    .attr("cx", data => newLinearScaleX(data[newAxisX]))
+    .attr("cy", data => newLinearScaleY(data[newAxisY]))
+  
+  // Re-orient circle state abbreviation labels
+  dataLabels.transition()
+    .duration(1000)
+    .attr("x", data => newLinearScaleX(data[newAxisX]))
+    .attr("y", data => newLinearScaleY(data[newAxisY]))
+    .attr("dy", ".4em")
+    .text(data => data.abbr);
+  
+  // Establish tooltips
+  var toolTip = d3.tip()
+    .attr("class", "d3-tip")
+    .offset([-20, 0])
+    .html(stateData => `${stateData.state}<br>
+    ${axisOptions[newAxisX]}: ${stateData[newAxisX]}<br>
+    ${axisOptions[newAxisY]}: ${stateData[newAxisY]}`);
+  
+  // Link Tooltips
+  dataPoints.call(toolTip);
+  
+    // Create event listeners
+    dataPoints.on("click", function(data) {
+      toolTip.show(data, this);
+    })
+      .on("mouseout", function(data) {
+        toolTip.hide(data, this);
+      });
+  };
