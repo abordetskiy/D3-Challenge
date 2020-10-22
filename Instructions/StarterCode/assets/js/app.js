@@ -99,7 +99,7 @@ var stateData = [
 
 // Establish initial axes
 
-var selectedAxisX = "age"
+var selectedAxisX = "obesity"
 var selectedAxisY = "smokes"
 
 var axisOptions = {"obesity": "Obese (%)","smokes": "Smokers (%)", "healthcare": "Lacks Healthcare (%)", "age": "Age (Median)", "poverty": "In Poverty (%)", "income": "Household INcome (Median)" }
@@ -108,12 +108,12 @@ function createChart(stateData, xAxis, yAxis) {
 
 // Scale data to fit along x axis
 var xLinearScale = d3.scaleLinear()
-    .domain([d3.min(stateData, data => data.age)-1, d3.max(stateData, data => data[xAxis])+1])
+    .domain([d3.min(stateData, data => data[xAxis])-1, d3.max(stateData, data => data[xAxis])+1])
     .range([0, chartWidth]);
 
 // Scale data to fit along y axis
 var yLinearScale = d3.scaleLinear()
-    .domain([d3.min(stateData, data => data.smokes)-1,d3.max(stateData, data => data[yAxis])+1])
+    .domain([d3.min(stateData, data => data[yAxis])-1,d3.max(stateData, data => data[yAxis])+1])
     .range([chartHeight, 0]);
 
 // Establish axis variables
