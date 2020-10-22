@@ -6,8 +6,8 @@ var svgHeight = 950;
 var margins = {
   top: 20,
   right: 20,
-  bottom: 80,
-  left: 80
+  bottom: 100,
+  left: 120
 };
 // Establish chart dimensions based on SVG dimensions less margins
 var chartWidth = svgWidth - margins.left - margins.right;
@@ -99,10 +99,10 @@ var stateData = [
 
 // Establish initial axes
 
-var selectedAxisX = "obesity"
+var selectedAxisX = "age"
 var selectedAxisY = "smokes"
 
-var axisOptions = {"obesity": "Obese (%)","smokes": "Smokers (%)", "healthcare": "Lacks Healthcare (%)", "age": "Age (Median)", "poverty": "In Poverty (%)", "income": "Household INcome (Median)" }
+var axisOptions = {"obesity": "Obese (%)","smokes": "Smokers (%)", "healthcare": "Lacks Healthcare (%)", "age": "Age (Median)", "poverty": "In Poverty (%)", "income": "Household Income (Median)" }
 // ============================================
 function createChart(stateData, xAxis, yAxis) {
 
@@ -156,7 +156,7 @@ var toolTip = d3.tip()
 .offset([-20, 0])
 .html(data => `${data.state}<br>
 ${axisOptions[xAxis]}: ${data[xAxis]}<br>
-${axisOptions[yAxis]}: ${data[yAxis]}%`);
+${axisOptions[yAxis]}: ${data[yAxis]}`);
 
 // Link Tooltips
 dataPoints.call(toolTip);
@@ -171,18 +171,48 @@ dataPoints.on("click", function(data) {
 };
 // ============================================
 
+
+
  // Create x axis label
- var xLabel = chartGroup.append("text")
+ var povertyAxisLabel = chartGroup.append("text")
  .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + margins.top + 20})`)
  .attr("class", "aText")
- .text(axisOptions[selectedAxisX]);
+ .text(axisOptions["poverty"]);
+
+ var ageAxisLabel = chartGroup.append("text")
+ .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + margins.top + 40})`)
+ .attr("class", "aText")
+ .text(axisOptions["age"]);
+
+ var incomeAxisLabel = chartGroup.append("text")
+ .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + margins.top + 60})`)
+ .attr("class", "aText")
+ .text(axisOptions["income"]);
 
 // Create y axis labels
-var yLabel = chartGroup.append("text")
+var obesityAxisLabel = chartGroup.append("text")
 .attr("transform", "rotate(-90)")
 .attr("y", 0 - margins.left + 40)
 .attr("x", 0 - (chartHeight / 2))
 .attr("class", "aText")
-.text(axisOptions[selectedAxisY]);
+.text(axisOptions["obesity"]);
+
+var smokesAxisLabel = chartGroup.append("text")
+.attr("transform", "rotate(-90)")
+.attr("y", 0 - margins.left + 60)
+.attr("x", 0 - (chartHeight / 2))
+.attr("class", "aText")
+.text(axisOptions["smokes"]);
+
+var healthcareAxisLabel = chartGroup.append("text")
+.attr("transform", "rotate(-90)")
+.attr("y", 0 - margins.left + 80)
+.attr("x", 0 - (chartHeight / 2))
+.attr("class", "aText")
+.text(axisOptions["healthcare"]);
 
 createChart(stateData, selectedAxisX, selectedAxisY)
+
+
+
+axisOptions = {"obesity": "Obese (%)","smokes": "Smokers (%)", "healthcare": "Lacks Healthcare (%)", "age": "Age (Median)", "poverty": "In Poverty (%)", "income": "Household INcome (Median)" }
