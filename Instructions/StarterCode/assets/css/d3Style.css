@@ -51,6 +51,7 @@
 .chart {
   display: block;
   margin: 0;
+  width: 1500px;
 }
 
 .d3-tip {

@@ -3,10 +3,23 @@
   border: 1px solid #e3e3e3;
 }
 
+.row {
+  width: 1500px;
+}
+#scatter {
+ width: 1500px;
+}
 /* Sticky Footer rules (https://getbootstrap.com/examples/sticky-footer/) */
 html {
   position: relative;
   min-height: 100%;
+}
+
+h2 {
+  text-align: center;
+}
+h6 {
+  text-align: center;
 }
 
 body {

@@ -19,26 +19,38 @@
   <div class="container">
     <div class="row">
       <div class="col-xs-12 col-md-12">
-        <h1>D3Times</h1>
-        <h4>Please select any of the axes to change the graph and click on a datapoint to get specific information about that State's metrics</h4>
+        <h2>The D3Times Presents: An Analysis of Healthcare Risks and Income/Age across US States</h2>
+        <br>
+        <h6>Please select any of the grey axes to update the graph accordingly and click on a datapoint to get specific information about that State's metrics</h6>
       </div>
     </div>
     <div class="row">
       <div class="col-xs-12  col-md-9">
         <div id="scatter">
-          <!-- We append our chart here. -->
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-xs-12  col-md-9">
         <div class="article">
-          <h2>Correlations Between Health Risks and Median Income</h2>
-          <p>In general, Higher Income seems to be correlationd with less obesity, and less percentage of smokers. </p>
-          <h2>Correlations Between Health Risks and Poverty Rate</h2>
-          <p>While Poverty rate seems to be slightly correlated with health risks, though the correlations are weaker than those with Median Income. The closest correlation in this category seems to be between poverty rate and percentage who lack healthcare. </p>
-          <h2>Correlations Between Health Risks and Age</h2>
-          <p>Age seemed to be the least associated with any of the health risks, though there seems to be a slight negative correlation with percentage who lack healthcare. In other words, younger residents may more commonly lack healthcare. </p>
+          <h4>The scatterplot shows us the percieved correlations between:</h4>
+          <br>
+          <h5>Health Risks and Median Household Income</h5>
+
+          <p>In general, higher income seems to be correlated negatively with healthcare risks, with the strongest correlations (most tightly clustered datapoints) below 65,000 median household income.
+            Among the healthcare risks, it appears that smoking is most strongly correlated negatively with median household income under 65,000, but obesity is more strongly correlated negatively accross the full range of states.
+          </p>
+
+          <h5>Health Risks and Poverty Rate</h5>
+
+          <p>As expected, the poverty rate shows the inverse correlation with healthcare risks as median household income. 
+            The strongest correlation in this group, however, seems to be between the poverty rate, and the rate of the population who lack healthcare. </p>
+
+          <h5>Health Risks and Age</h5>
+
+          <p>Age appears to be both the most normal distribution, with a heavily clustered mean around ~37 years, and also the least correlated with any of the healthcare risks.
+            In other words, it looks as though age is less of a factor in healthcare risks than the financial metrics. 
+          </p>
         </div>
       </div>
     </div>
