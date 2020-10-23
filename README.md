@@ -10,6 +10,8 @@
 
 #### The webpage also includes analysis of all the metrics, grouped by axis for a brief explanation of the results. The chart, however, is meant to be utilized by the user to draw their own conclusions.
 
+###### Based on the size of the datapoints and in order to prevent too much overlap, the chart has been blown up to near-fullscreen size. Please adjust your browser zoom to accomidate the whole chart if limited by monitor resolution. 
+
 *Note: attempts to call data from data.csv directly results in a CORS error. Rather than permantently open a port on my local machine, I've opted to include the dataset within app.js. This involved importing the data via D3.csv(), parsing the data into a text file, and hard coding the array of objects into app.js.*
 
 -----
