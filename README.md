@@ -2,7 +2,7 @@
 
 #### Using data pulled form the U.S. Census Bureau via a CSV file, this site creates a scatterplot to show visual correlations between Healthcare Risks and Age/Financial demographics.
 
-##### To access the Website - Please follow this Github Pages Link: https://abordetskiy.github.io/D3-Challenge
+##### To access the Website - Please follow this Github Pages Link: https://abordetskiy.github.io/D3-Challenge/
 
 #### The chart is drawn using HTML5 , CSS, and raw JavaScript along with the D3.js plugin. Multiple axes on the chart allow the user to select their chosen metrics and instantly re-populate the chart with the correct axis and datapoints. Simply select the axis you would like and watch the circles move around! 
 
